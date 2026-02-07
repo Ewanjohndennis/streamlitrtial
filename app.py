@@ -7,7 +7,7 @@ st.set_page_config(page_title="Productivity Dashboard", layout="wide")
 
 DATA_PATH = "data/tasks.csv"
 
-# Create folder & file if not exist
+
 os.makedirs("data", exist_ok=True)
 if not os.path.exists(DATA_PATH):
     df = pd.DataFrame(columns=["Tasks", "Category", "Deadline", "Status", "Created"])
@@ -18,9 +18,6 @@ df = pd.read_csv(DATA_PATH)
 st.title("Productivity Dashboard")
 st.write("All your Tasks in One Place")
 
-# ---------------------------------------------------
-# Correct: Use callback to clear inputs
-# ---------------------------------------------------
 def add_task_callback():
     task = st.session_state.taskinput
     category = st.session_state.categoryinput
@@ -41,18 +38,13 @@ def add_task_callback():
     updated_df.to_csv(DATA_PATH, index=False)
     st.session_state.df_data = updated_df
 
-    # CLEAR FIELDS SAFELY
     st.session_state.taskinput = ""
     st.session_state.categoryinput = "Study"
     st.session_state.deadlineinput = datetime.now().date()
 
-# Store df in session_state
 if "df_data" not in st.session_state:
     st.session_state.df_data = df
 
-# ---------------------------------------------------
-# Input Section
-# ---------------------------------------------------
 st.subheader("Add Task")
 
 st.text_input("Task Name", key="taskinput")
@@ -61,12 +53,8 @@ st.date_input("Deadline", key="deadlineinput")
 
 st.button("Add Task", on_click=add_task_callback)
 
-# Reload df from session state
 df = st.session_state.df_data
 
-# ---------------------------------------------------
-# Task List
-# ---------------------------------------------------
 st.subheader("Your Tasks")
 
 if not df.empty:
@@ -85,9 +73,6 @@ if not df.empty:
 else:
     st.info("No Tasks Added")
 
-# ---------------------------------------------------
-# Dashboard Section
-# ---------------------------------------------------
 st.subheader("Dashboard")
 
 if not df.empty:
